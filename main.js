@@ -50,11 +50,14 @@ function getNewHex()
     objHex.offsetY = 0;
     objHex.cube = {};
     objHex.unitIndex = -1;
+    objHex.areaType = 0;
     return objHex;    
 }
 function loadResources() {
     heart = new Image();
     heart.src = "images/heart.png";
+    desert = new Image();
+    desert.src = "images/desert.png";    
     attak = new Image();
     attak.src = "images/attak50.png";
     iks = new Image();
@@ -224,6 +227,7 @@ function Init()
             h.offsetX = index;
             h.offsetY = 2*yindex;
             h.cube = offsetToCube(h.offsetX, h.offsetY);
+            h.areaType = 1;
             arrHexs.push(h);
         }
     }
@@ -240,6 +244,7 @@ function Init()
             h.offsetX = index;
             h.offsetY = 2*yindex+1;
             h.cube = offsetToCube(h.offsetX, h.offsetY);
+            h.areaType = 1;
             arrHexs.push(h);
         }
     }
@@ -364,7 +369,11 @@ function drawHpEffect()
 
 function drawGrid()
 {
-    for (let index = 0; index < arrHexs.length; index++) {     
+    for (let index = 0; index < arrHexs.length; index++) {  
+
+        let x = arrHexs[index].xC;
+        let y = arrHexs[index].yC;
+        ctx.drawImage(desert, x-43,y-43);
 
         ctx.beginPath();
         ctx.arc(arrHexs[index].xC, arrHexs[index].yC, dh, 0, _360, false);
