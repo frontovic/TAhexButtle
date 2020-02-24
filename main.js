@@ -6,6 +6,7 @@ var thunder;
 var plane;
 var attak;
 var grid;
+var swordsmanRight;
 var tigerLeft;
 var tigerRight;
 var colors = ['red', 'blue', 'green', 'black','grey', 'yellow'];
@@ -76,7 +77,8 @@ function loadResources() {
     tigerLeft.src = "images/TigerLeftSprite100.png";
     tigerRight = new Image();
     tigerRight.src = "images/TigerRight100.png";
-    //TigerRight100
+    swordsmanRight = new Image();
+    swordsmanRight.src = "images/swordsmanalfa750.png";    
 
     figures.push(heart);
     figures.push(iks);
@@ -220,7 +222,7 @@ function Init()
     let startPosy = aHex;
     for(let yindex = 0; yindex< 4; yindex++) {
         let ypos = startPosy+ (yindex*3*aHex);
-        for (let index = 0; index < 7; index++) {
+        for (let index = 0; index < 8; index++) {
             let h = getNewHex();
             h.yC = ypos;
             h.xC = startPosx+(index*d2h);
@@ -237,7 +239,7 @@ function Init()
 
     for(let yindex = 0; yindex< 3; yindex++) {
         let ypos = startPosy+ (yindex*3*aHex);
-        for (let index = 0; index < 7; index++) {
+        for (let index = 0; index < 8; index++) {
             let h = getNewHex();
             h.yC = ypos;
             h.xC = startPosx+(index*d2h);
@@ -248,17 +250,19 @@ function Init()
             arrHexs.push(h);
         }
     }
-    units.push({pos:5, maxHp: 100, currentHp: 57, group: 1, atak: 30, isMoving: false, oldPos: {}, moveRange: 3});     
-    units.push({pos:10, maxHp: 100, currentHp: 80, group: 1, atak: 30, isMoving: false, oldPos: {}, moveRange: 3});
-    units.push({pos:16, maxHp: 100, currentHp: 12, group: 1, atak: 30, isMoving: false, oldPos: {}, moveRange: 3});
-    units.push({pos:20, maxHp: 100, currentHp: 100, group: 2, atak: 30, isMoving: false, oldPos: {}, moveRange: 3});
-    units.push({pos:26, maxHp: 100, currentHp: 90, group: 2, atak: 30, isMoving: false, oldPos: {}, moveRange: 3});
+    units.push({pos:5, maxHp: 100, currentHp: 57, group: 1, atak: 30, isMoving: false, oldPos: {}, moveRange: 3, isRange: false, classType: 'tiger'});     
+    units.push({pos:10, maxHp: 100, currentHp: 80, group: 1, atak: 30, isMoving: false, oldPos: {}, moveRange: 3, isRange: false, classType: 'tiger'});
+    units.push({pos:16, maxHp: 100, currentHp: 12, group: 1, atak: 30, isMoving: false, oldPos: {}, moveRange: 3, isRange: false, classType: 'tiger'});
+    units.push({pos:20, maxHp: 100, currentHp: 100, group: 2, atak: 30, isMoving: false, oldPos: {}, moveRange: 3, isRange: false, classType: 'tiger'});
+    units.push({pos:26, maxHp: 100, currentHp: 90, group: 2, atak: 30, isMoving: false, oldPos: {}, moveRange: 3, isRange: false, classType: 'tiger'});
+    units.push({pos:13, maxHp: 50, currentHp: 50, group: 2, atak: 15, isMoving: false, oldPos: {}, moveRange: 2, isRange: false, classType: 'swordsMan'});
     
     arrHexs[5].unitIndex = 0;
     arrHexs[10].unitIndex = 1;
     arrHexs[16].unitIndex = 2;
     arrHexs[20].unitIndex = 3;
     arrHexs[26].unitIndex = 4;
+    arrHexs[13].unitIndex = 5;
    // h.arrPoint.push({x:0,y:0});
    // h.arrPoint.push({x:50,y:0});
   //  h.arrPoint.push({x:50,y:50});
@@ -322,7 +326,15 @@ function drawUnits()
 
         }else 
         {
-            ctx.drawImage(tigerRight, x-48,y-37);
+            if(units[index].classType === 'tiger')
+            {
+                ctx.drawImage(tigerRight, x-48,y-37);
+            }
+            else
+            {
+                ctx.drawImage(swordsmanRight,0,0, 750, 750, x-40,y-45, 80, 80);
+            }
+            
         }
         
         drawHp(index);
@@ -378,7 +390,7 @@ function drawGrid()
         ctx.beginPath();
         ctx.arc(arrHexs[index].xC, arrHexs[index].yC, dh, 0, _360, false);
         
-        if(cube_distance(arrHexs[units[currentUnit].pos].cube, arrHexs[index].cube)<=3)
+        if(cube_distance(arrHexs[units[currentUnit].pos].cube, arrHexs[index].cube)<=units[currentUnit].moveRange)
         {
             ctx.globalAlpha = 0.3;
             ctx.fillStyle = 'grey';
