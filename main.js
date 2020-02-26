@@ -4,6 +4,9 @@ var rector;
 var star;
 var thunder;
 var plane;
+var desert;
+var water;
+var rock;
 var attak;
 var grid;
 var swordsmanRight;
@@ -58,7 +61,9 @@ function loadResources() {
     heart = new Image();
     heart.src = "images/heart.png";
     desert = new Image();
-    desert.src = "images/desert.png";    
+    desert.src = "images/desert.png";
+    water = new Image();
+    water.src = "images/water86.png";
     attak = new Image();
     attak.src = "images/attak50.png";
     iks = new Image();
@@ -79,6 +84,9 @@ function loadResources() {
     tigerRight.src = "images/TigerRight100.png";
     swordsmanRight = new Image();
     swordsmanRight.src = "images/swordsmanalfa750.png";    
+    rock = new Image();
+    rock.src = "images/rockalfaRotate750.png";
+    //rockalfaRotate750.png
 
     figures.push(heart);
     figures.push(iks);
@@ -229,7 +237,7 @@ function Init()
             h.offsetX = index;
             h.offsetY = 2*yindex;
             h.cube = offsetToCube(h.offsetX, h.offsetY);
-            h.areaType = 1;
+           // h.areaType = 1;
             arrHexs.push(h);
         }
     }
@@ -246,7 +254,7 @@ function Init()
             h.offsetX = index;
             h.offsetY = 2*yindex+1;
             h.cube = offsetToCube(h.offsetX, h.offsetY);
-            h.areaType = 1;
+           // h.areaType = 1;
             arrHexs.push(h);
         }
     }
@@ -263,10 +271,23 @@ function Init()
     arrHexs[20].unitIndex = 3;
     arrHexs[26].unitIndex = 4;
     arrHexs[13].unitIndex = 5;
+    initMapHex();
    // h.arrPoint.push({x:0,y:0});
    // h.arrPoint.push({x:50,y:0});
   //  h.arrPoint.push({x:50,y:50});
    // h.arrPoint.push({x:0,y:50});
+}
+function initMapHex()
+{
+    arrHexs[1].areaType = 1;
+    arrHexs[2].areaType = 1;
+    arrHexs[3].areaType = 1;
+    arrHexs[4].areaType = 1;
+    arrHexs[15].areaType = 2;
+    arrHexs[21].areaType = 2;
+    arrHexs[22].areaType = 3;
+    arrHexs[23].areaType = 3;
+    arrHexs[24].areaType = 3;
 }
 
 function drowPlane()
@@ -378,25 +399,34 @@ function drawHpEffect()
         }
     }
 }
-
+function getAreaType(hex)
+{
+    if(hex.areaType === 1) return desert;
+    if(hex.areaType === 2) return water;
+    if(hex.areaType === 3) return rock;
+    throw "notimplemented";
+}
 function drawGrid()
 {
     for (let index = 0; index < arrHexs.length; index++) {  
 
         let x = arrHexs[index].xC;
         let y = arrHexs[index].yC;
-        ctx.drawImage(desert, x-43,y-43);
+        if(arrHexs[index].areaType!==0) ctx.drawImage(getAreaType(arrHexs[index]), x-43,y-43, 86, 86); // 
+        
 
         ctx.beginPath();
         ctx.arc(arrHexs[index].xC, arrHexs[index].yC, dh, 0, _360, false);
         
         if(cube_distance(arrHexs[units[currentUnit].pos].cube, arrHexs[index].cube)<=units[currentUnit].moveRange)
         {
+            if(arrHexs[index].unitIndex === -1) {
             ctx.globalAlpha = 0.3;
             ctx.fillStyle = 'grey';
             ctx.fill();            
             ctx.globalAlpha = 1;
             ctx.fillStyle = 'red'; // default fill
+            }
         }
 
         // orange -  wait user tern
