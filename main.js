@@ -226,11 +226,13 @@ var units = [];
 var currentUnit = 0;
 function Init()
 {   
+    const hexWidth = 12;
+    const hexHeight = 10/2;
     let startPosx = aHex;
     let startPosy = aHex;
-    for(let yindex = 0; yindex< 4; yindex++) {
+    for(let yindex = 0; yindex< hexHeight; yindex++) {
         let ypos = startPosy+ (yindex*3*aHex);
-        for (let index = 0; index < 8; index++) {
+        for (let index = 0; index < hexWidth; index++) {
             let h = getNewHex();
             h.yC = ypos;
             h.xC = startPosx+(index*d2h);
@@ -245,9 +247,9 @@ function Init()
     startPosx = startPosx+dh;
     startPosy = startPosy+(aHex*3)/2;
 
-    for(let yindex = 0; yindex< 3; yindex++) {
+    for(let yindex = 0; yindex< hexHeight; yindex++) {
         let ypos = startPosy+ (yindex*3*aHex);
-        for (let index = 0; index < 8; index++) {
+        for (let index = 0; index < hexWidth; index++) {
             let h = getNewHex();
             h.yC = ypos;
             h.xC = startPosx+(index*d2h);
@@ -258,19 +260,19 @@ function Init()
             arrHexs.push(h);
         }
     }
-    units.push({pos:5, maxHp: 100, currentHp: 57, group: 1, atak: 30, isMoving: false, oldPos: {}, moveRange: 3, isRange: false, classType: 'tiger'});     
-    units.push({pos:10, maxHp: 100, currentHp: 80, group: 1, atak: 30, isMoving: false, oldPos: {}, moveRange: 3, isRange: false, classType: 'tiger'});
-    units.push({pos:16, maxHp: 100, currentHp: 12, group: 1, atak: 30, isMoving: false, oldPos: {}, moveRange: 3, isRange: false, classType: 'tiger'});
-    units.push({pos:20, maxHp: 100, currentHp: 100, group: 2, atak: 30, isMoving: false, oldPos: {}, moveRange: 3, isRange: false, classType: 'tiger'});
-    units.push({pos:26, maxHp: 100, currentHp: 90, group: 2, atak: 30, isMoving: false, oldPos: {}, moveRange: 3, isRange: false, classType: 'tiger'});
-    units.push({pos:13, maxHp: 50, currentHp: 50, group: 2, atak: 15, isMoving: false, oldPos: {}, moveRange: 2, isRange: false, classType: 'swordsMan'});
+    units.push({pos:12, maxHp: 100, currentHp: 57, group: 1, atak: 30, isMoving: false, oldPos: {}, moveRange: 3, isRange: false, classType: 'tiger'});     
+    units.push({pos:24, maxHp: 100, currentHp: 80, group: 1, atak: 30, isMoving: false, oldPos: {}, moveRange: 3, isRange: false, classType: 'tiger'});
+    units.push({pos:36, maxHp: 100, currentHp: 12, group: 1, atak: 30, isMoving: false, oldPos: {}, moveRange: 3, isRange: false, classType: 'tiger'});
+    units.push({pos:23, maxHp: 100, currentHp: 100, group: 2, atak: 30, isMoving: false, oldPos: {}, moveRange: 3, isRange: false, classType: 'tiger'});
+    units.push({pos:35, maxHp: 100, currentHp: 90, group: 2, atak: 30, isMoving: false, oldPos: {}, moveRange: 3, isRange: false, classType: 'tiger'});
+    units.push({pos:47, maxHp: 50, currentHp: 50, group: 2, atak: 15, isMoving: false, oldPos: {}, moveRange: 2, isRange: false, classType: 'swordsMan'});
     
-    arrHexs[5].unitIndex = 0;
-    arrHexs[10].unitIndex = 1;
-    arrHexs[16].unitIndex = 2;
-    arrHexs[20].unitIndex = 3;
-    arrHexs[26].unitIndex = 4;
-    arrHexs[13].unitIndex = 5;
+    arrHexs[12].unitIndex = 0;
+    arrHexs[24].unitIndex = 1;
+    arrHexs[36].unitIndex = 2;
+    arrHexs[23].unitIndex = 3;
+    arrHexs[35].unitIndex = 4;
+    arrHexs[47].unitIndex = 5;
     initMapHex();
    // h.arrPoint.push({x:0,y:0});
    // h.arrPoint.push({x:50,y:0});
@@ -279,22 +281,22 @@ function Init()
 }
 function initMapHex()
 {
-    arrHexs[1].areaType = 1;
-    arrHexs[2].areaType = 1;
-    arrHexs[3].areaType = 1;
-    arrHexs[4].areaType = 1;
-    arrHexs[15].areaType = 2;
-    arrHexs[21].areaType = 2;
-    arrHexs[22].areaType = 3;
-    arrHexs[23].areaType = 3;
-    arrHexs[24].areaType = 3;
+    arrHexs[40].areaType = 1;
+    arrHexs[41].areaType = 1;
+    arrHexs[42].areaType = 1;
+    arrHexs[43].areaType = 1;
+    arrHexs[101].areaType = 2;
+    arrHexs[102].areaType = 2;
+    arrHexs[77].areaType = 3;
+    arrHexs[30].areaType = 3;
+    arrHexs[89].areaType = 3;
 }
 
 function drowPlane()
 {
     window.requestAnimFrame(drowPlane);    
         ctx.fillStyle = 'red';
-        ctx.drawImage(plane,0,0);
+        ctx.drawImage(plane,0,0, 1200, 800);
         //ctx.drawImage(grid,0,0);
         drawGrid();
         drawUnits();
@@ -449,6 +451,9 @@ function drawGrid()
         }
 
         ctx.stroke();   
+        //ctx.fillStyle = "red";
+        //ctx.font = " 11pt Arial";
+        //ctx.fillText(index,x,y);
     }
     
 }
