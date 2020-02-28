@@ -6,6 +6,7 @@ var thunder;
 var plane;
 var desert;
 var water;
+var swordAttak;
 var rock;
 var attak;
 var grid;
@@ -86,7 +87,8 @@ function loadResources() {
     swordsmanRight.src = "images/swordsmanalfa750.png";    
     rock = new Image();
     rock.src = "images/rockalfaRotate750.png";
-    //rockalfaRotate750.png
+    swordAttak = new Image();
+    swordAttak.src = "images/swordAttak.png";   
 
     figures.push(heart);
     figures.push(iks);
@@ -266,7 +268,7 @@ function Init()
     units.push({pos:23, maxHp: 100, currentHp: 100, group: 2, atak: 30, isMoving: false, oldPos: {}, moveRange: 3, isRange: false, classType: 'tiger'});
     units.push({pos:35, maxHp: 100, currentHp: 90, group: 2, atak: 30, isMoving: false, oldPos: {}, moveRange: 3, isRange: false, classType: 'tiger'});
     units.push({pos:47, maxHp: 50, currentHp: 50, group: 2, atak: 15, isMoving: false, oldPos: {}, moveRange: 2, isRange: false, classType: 'swordsMan'});
-    
+    //atakRange
     arrHexs[12].unitIndex = 0;
     arrHexs[24].unitIndex = 1;
     arrHexs[36].unitIndex = 2;
@@ -429,6 +431,15 @@ function drawGrid()
             ctx.globalAlpha = 1;
             ctx.fillStyle = 'red'; // default fill
             }
+        }
+        if(cube_distance(arrHexs[units[currentUnit].pos].cube, arrHexs[index].cube)<=units[currentUnit].atakRange+units[currentUnit].moveRange)
+        {            
+            ctx.globalAlpha = 0.1;
+            ctx.fillStyle = 'grey';
+            ctx.fill();            
+            ctx.globalAlpha = 1;
+            ctx.fillStyle = 'red'; // default fill
+            
         }
 
         // orange -  wait user tern
