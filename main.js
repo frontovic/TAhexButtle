@@ -262,12 +262,12 @@ function Init()
             arrHexs.push(h);
         }
     }
-    units.push({pos:12, maxHp: 100, currentHp: 57, group: 1, atak: 30, isMoving: false, oldPos: {}, moveRange: 3, isRange: false, classType: 'tiger'});     
-    units.push({pos:24, maxHp: 100, currentHp: 80, group: 1, atak: 30, isMoving: false, oldPos: {}, moveRange: 3, isRange: false, classType: 'tiger'});
-    units.push({pos:36, maxHp: 100, currentHp: 12, group: 1, atak: 30, isMoving: false, oldPos: {}, moveRange: 3, isRange: false, classType: 'tiger'});
-    units.push({pos:23, maxHp: 100, currentHp: 100, group: 2, atak: 30, isMoving: false, oldPos: {}, moveRange: 3, isRange: false, classType: 'tiger'});
-    units.push({pos:35, maxHp: 100, currentHp: 90, group: 2, atak: 30, isMoving: false, oldPos: {}, moveRange: 3, isRange: false, classType: 'tiger'});
-    units.push({pos:47, maxHp: 50, currentHp: 50, group: 2, atak: 15, isMoving: false, oldPos: {}, moveRange: 2, isRange: false, classType: 'swordsMan'});
+    units.push({pos:12, maxHp: 100, currentHp: 57, group: 1, atak: 30, isMoving: false, oldPos: {}, atakRange: 7, moveRange: 3, isRange: true, classType: 'tiger'});     
+    units.push({pos:24, maxHp: 100, currentHp: 80, group: 1, atak: 30, isMoving: false, oldPos: {}, atakRange: 7, moveRange: 3, isRange: true, classType: 'tiger'});
+    units.push({pos:36, maxHp: 100, currentHp: 12, group: 1, atak: 30, isMoving: false, oldPos: {}, atakRange: 7, moveRange: 3, isRange: true, classType: 'tiger'});
+    units.push({pos:23, maxHp: 100, currentHp: 100, group: 2, atak: 30, isMoving: false, oldPos: {}, atakRange: 7, moveRange: 3, isRange: true, classType: 'tiger'});
+    units.push({pos:35, maxHp: 100, currentHp: 90, group: 2, atak: 30, isMoving: false, oldPos: {}, atakRange: 7, moveRange: 3, isRange: true, classType: 'tiger'});
+    units.push({pos:47, maxHp: 50, currentHp: 50, group: 2, atak: 15, isMoving: false, oldPos: {}, atakRange: 1, moveRange: 2, isRange: false, classType: 'swordsMan'});
     //atakRange
     arrHexs[12].unitIndex = 0;
     arrHexs[24].unitIndex = 1;
@@ -368,7 +368,8 @@ function drawUnits()
 }
 function drawAttak(index,x,y)
 {
-    if(units[index].pos == currentHexIndex) {
+    if(units[index].pos == currentHexIndex &&
+         cube_distance(arrHexs[units[currentUnit].pos].cube, arrHexs[currentHexIndex].cube)<=units[currentUnit].atakRange ) {
         if(units[currentUnit].group != units[index].group){
             let wpic = 40-attakEffect.dX;
             ctx.drawImage(attak, x-(wpic/2),y-(wpic/2), wpic, wpic);
@@ -425,7 +426,7 @@ function drawGrid()
         if(cube_distance(arrHexs[units[currentUnit].pos].cube, arrHexs[index].cube)<=units[currentUnit].moveRange)
         {
             if(arrHexs[index].unitIndex === -1) {
-            ctx.globalAlpha = 0.3;
+            ctx.globalAlpha = 0.2;
             ctx.fillStyle = 'grey';
             ctx.fill();            
             ctx.globalAlpha = 1;
@@ -434,7 +435,7 @@ function drawGrid()
         }
         if(cube_distance(arrHexs[units[currentUnit].pos].cube, arrHexs[index].cube)<=units[currentUnit].atakRange+units[currentUnit].moveRange)
         {            
-            ctx.globalAlpha = 0.1;
+            ctx.globalAlpha = 0.2;
             ctx.fillStyle = 'grey';
             ctx.fill();            
             ctx.globalAlpha = 1;
