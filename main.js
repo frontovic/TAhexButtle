@@ -298,7 +298,7 @@ function drowPlane()
 {
     window.requestAnimFrame(drowPlane);    
         ctx.fillStyle = 'red';
-        ctx.drawImage(plane,0,0, 1200, 800);
+        ctx.drawImage(plane,0,0, 1400, 800);
         //ctx.drawImage(grid,0,0);
         drawGrid();
         drawUnits();
