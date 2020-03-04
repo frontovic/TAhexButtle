@@ -5,7 +5,9 @@ var star;
 var thunder;
 var plane;
 var desert;
+var desertInfo;
 var water;
+var plainInfo;
 var swordAttak;
 var rock;
 var attak;
@@ -65,6 +67,10 @@ function loadResources() {
     desert.src = "images/desert.png";
     water = new Image();
     water.src = "images/water86.png";
+    plainInfo = new Image();
+    plainInfo.src = "images/plainInfo.png";
+    desertInfo = new Image();
+    desertInfo.src = "images/desertInfo.png";
     attak = new Image();
     attak.src = "images/attak50.png";
     iks = new Image();
@@ -303,11 +309,47 @@ function drowPlane()
         drawGrid();
         drawUnits();
         drawHpEffect();
+        drawInfo();
        // ctx.fillRect(point.x,point.y,10,10); 
        //попытка нарисовать круги клика если такой был. 
         drawClick();
-    }
+}
+function drawInfo()
+{
+    if(currentHexIndex != -1){
+        ctx.fillStyle = "black";
+        ctx.font = " 14pt Arial";
+        if(arrHexs[currentHexIndex].unitIndex === -1){
+            if(arrHexs[currentHexIndex].areaType === 0)
+            {
+                ctx.drawImage(plainInfo,1100,10, 120, 80);
+                ctx.fillText('Plain',1250,50);
+                ctx.fillText('Move cost: 1',1100,125);
+                ctx.fillText('Attack bonus: 15',1100,150);
+            }
+            if(arrHexs[currentHexIndex].areaType === 1)
+            {
+                ctx.drawImage(desertInfo,1100,10, 120, 80);
+                ctx.fillText('Desert',1250,50);
+                ctx.fillText('Move cost: 2',1100,125);
+            }
+           
+        }else{
+        ctx.drawImage(tigerLeft,0,0, 100, 74, 1100,10, 100, 74);      
 
+        ctx.fillText('Tiger',1250,50);
+        ctx.fillText('Class: Heavy unit',1100,100);
+        ctx.fillText('current Hp: 75(100)',1100,125);
+        ctx.fillText('Attack: 27-30',1100,150);
+        ctx.fillText('Max Range attack: 7',1100,175);
+        ctx.fillText('Effective Range attack: 4',1100,200);
+        ctx.fillText('Move Range: 3',1100,225);
+        ctx.fillText('Special Skills:',1100,275);
+        ctx.fillText('Ignore control zone',1100,300);
+        }
+        //
+    }
+}
 
 function drawUnits()
 {
