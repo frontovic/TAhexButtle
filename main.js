@@ -8,6 +8,11 @@ var desert;
 var desertInfo;
 var water;
 var plainInfo;
+var lightUnitIcon;
+var heavyUnitIcon;
+var rangeUnitIcon;
+var fastUnitIcon;
+var clickEffectSprite;
 var swordAttak;
 var rock;
 var attak;
@@ -36,6 +41,10 @@ var movingEffect ={};
 movingEffect.posX = 0;
 movingEffect.posY = 0;
 movingEffect.ticks = 0;
+var fireEffect = {};
+fireEffect.ticks = 0;
+var waterffect = {};
+waterffect.ticks = 0;
 const aHex = 50;
 const d2h = Math.sqrt(3)*aHex; //
 const dh = (Math.sqrt(3)*aHex)/2; //
@@ -66,9 +75,17 @@ function loadResources() {
     desert = new Image();
     desert.src = "images/desert.png";
     water = new Image();
-    water.src = "images/water86.png";
+    water.src = "images/waterSprite.png";
     plainInfo = new Image();
     plainInfo.src = "images/plainInfo.png";
+    lightUnitIcon = new Image();
+    lightUnitIcon.src = "images/lightUnitIcon.png";
+    heavyUnitIcon = new Image();
+    heavyUnitIcon.src = "images/heavyUnitIcon.png";
+    rangeUnitIcon = new Image();
+    rangeUnitIcon.src = "images/rangeUnitIcon.png";
+    fastUnitIcon = new Image();
+    fastUnitIcon.src = "images/fastUnitIcon.png";
     desertInfo = new Image();
     desertInfo.src = "images/desertInfo.png";
     attak = new Image();
@@ -87,6 +104,12 @@ function loadResources() {
     grid.src = "images/grid.png";    
     tigerLeft = new Image();
     tigerLeft.src = "images/TigerLeftSprite100.png";
+    tigerLeftFire = new Image();
+    tigerLeftFire.src = "images/tigerLeftFireSprite.png";
+    clickEffectSprite = new Image();
+    clickEffectSprite.src = "images/clickEffectSprite.png";
+    
+    
     tigerRight = new Image();
     tigerRight.src = "images/TigerRight100.png";
     swordsmanRight = new Image();
@@ -175,17 +198,24 @@ function tryMoveUnit()
            return; // если я кликнул по юниту своих войск, ничего не происходит. 
        }  
        else {
+           let distance = cube_distance(arrHexs[units[currentUnit].pos].cube, arrHexs[currentHexIndex].cube);
+           if(distance > units[currentUnit].atakRange)
+           {
+               return;
+           }
            // тут пересчет атаки
            let tergetUnit =  units[arrHexs[currentHexIndex].unitIndex];
            let curUnit = units[currentUnit];
            let damage = getRandomIntRang(curUnit.atak-5, curUnit.atak);
+           if(distance>4) damage = damage/2;// wrere 4 is effective distance
            let diffHp = tergetUnit.currentHp - damage;
-
            hpEffect.value = diffHp > 0 ? damage : tergetUnit.currentHp;
            hpEffect.isActive = true;
            hpEffect.pos = currentHexIndex;
 
-           tergetUnit.currentHp = diffHp >0 ? diffHp : 0;           
+           tergetUnit.currentHp = diffHp >0 ? diffHp : 0;
+           curUnit.isFireing = true;
+           fireEffect.ticks = 0;
            nextUnit();
         return;
        }
@@ -268,11 +298,11 @@ function Init()
             arrHexs.push(h);
         }
     }
-    units.push({pos:12, maxHp: 100, currentHp: 57, group: 1, atak: 30, isMoving: false, oldPos: {}, atakRange: 7, moveRange: 3, isRange: true, classType: 'tiger'});     
-    units.push({pos:24, maxHp: 100, currentHp: 80, group: 1, atak: 30, isMoving: false, oldPos: {}, atakRange: 7, moveRange: 3, isRange: true, classType: 'tiger'});
-    units.push({pos:36, maxHp: 100, currentHp: 12, group: 1, atak: 30, isMoving: false, oldPos: {}, atakRange: 7, moveRange: 3, isRange: true, classType: 'tiger'});
-    units.push({pos:23, maxHp: 100, currentHp: 100, group: 2, atak: 30, isMoving: false, oldPos: {}, atakRange: 7, moveRange: 3, isRange: true, classType: 'tiger'});
-    units.push({pos:35, maxHp: 100, currentHp: 90, group: 2, atak: 30, isMoving: false, oldPos: {}, atakRange: 7, moveRange: 3, isRange: true, classType: 'tiger'});
+    units.push({pos:12, maxHp: 100, currentHp: 57, group: 1, atak: 30, isMoving: false, isFireing: false, oldPos: {}, atakRange: 7, moveRange: 3, isRange: true, classType: 'tiger'});     
+    units.push({pos:24, maxHp: 100, currentHp: 80, group: 1, atak: 30, isMoving: false, isFireing: false, oldPos: {}, atakRange: 7, moveRange: 3, isRange: true, classType: 'tiger'});
+    units.push({pos:36, maxHp: 100, currentHp: 12, group: 1, atak: 30, isMoving: false, isFireing: false, oldPos: {}, atakRange: 7, moveRange: 3, isRange: true, classType: 'tiger'});
+    units.push({pos:23, maxHp: 100, currentHp: 100, group: 2, atak: 30, isMoving: false, isFireing: false, oldPos: {}, atakRange: 7, moveRange: 3, isRange: true, classType: 'tiger'});
+    units.push({pos:35, maxHp: 100, currentHp: 90, group: 2, atak: 30, isMoving: false, isFireing: false, oldPos: {}, atakRange: 7, moveRange: 3, isRange: true, classType: 'tiger'});
     units.push({pos:47, maxHp: 50, currentHp: 50, group: 2, atak: 15, isMoving: false, oldPos: {}, atakRange: 1, moveRange: 2, isRange: false, classType: 'swordsMan'});
     //atakRange
     arrHexs[12].unitIndex = 0;
@@ -316,6 +346,11 @@ function drowPlane()
 }
 function drawInfo()
 {
+    ctx.drawImage(lightUnitIcon, 1100, 500, 50, 50);
+    ctx.drawImage(heavyUnitIcon, 1155, 500, 50, 50);
+    ctx.drawImage(rangeUnitIcon, 1210, 500, 50, 50);
+    ctx.drawImage(fastUnitIcon, 1265, 500, 50, 50);
+    
     if(currentHexIndex != -1){
         ctx.fillStyle = "black";
         ctx.font = " 14pt Arial";
@@ -335,7 +370,8 @@ function drawInfo()
             }
            
         }else{
-        ctx.drawImage(tigerLeft,0,0, 100, 74, 1100,10, 100, 74);      
+        ctx.drawImage(tigerLeft,0,0, 100, 74, 1100,10, 100, 74);  
+        //ctx.drawImage(tigerRight,0,0, 100, 74, 2100,400, 100, 74);       
 
         ctx.fillText('Tiger',1250,50);
         ctx.fillText('Class: Heavy unit',1100,100);
@@ -386,10 +422,24 @@ function drawUnits()
             }
 
         }
+       
 
         if(units[index].group == 1)
         {
-            ctx.drawImage(tigerLeft,sx,sy, 100, 74, x-48,y-37, 100, 74);
+            if(units[index].isFireing)
+            {
+                let kadr = Math.floor(fireEffect.ticks/3) % 6;
+                sx = 220*kadr;
+                fireEffect.ticks++;
+                ctx.drawImage(tigerLeftFire,sx,sy, 220, 150, x-48,y-37, 110, 75);
+                if(kadr>=5)
+                {
+                    units[index].isFireing = false;
+                   // Game.isUnitMove = false;    
+                }  
+            }
+            else ctx.drawImage(tigerLeft,sx,sy, 100, 75, x-48,y-37, 100, 75);
+          // else ctx.drawImage(tigerLeftFire,sx,sy, 220, 150, x-48,y-37, 100, 74);
 
         }else 
         {
@@ -459,8 +509,20 @@ function drawGrid()
 
         let x = arrHexs[index].xC;
         let y = arrHexs[index].yC;
-        if(arrHexs[index].areaType!==0) ctx.drawImage(getAreaType(arrHexs[index]), x-43,y-43, 86, 86); // 
-        
+        if(arrHexs[index].areaType!==0) {
+            if(arrHexs[index].areaType === 2)
+            {
+                let kadr = Math.floor(waterffect.ticks/20) % 10;
+                sx = 86*kadr;
+                waterffect.ticks++;
+                ctx.drawImage(water,sx,0, 86, 86, x-43,y-43, 86, 86);
+                if(kadr>=9)
+                {
+                    waterffect.ticks = 0;  
+                }  
+            }
+            else ctx.drawImage(getAreaType(arrHexs[index]), x-43,y-43, 86, 86); // 
+        }
 
         ctx.beginPath();
         ctx.arc(arrHexs[index].xC, arrHexs[index].yC, dh, 0, _360, false);
@@ -543,23 +605,36 @@ function drawHp(unitIndex)
 }
 function drawClick()
 {
-    if(objClick.isActive){
-        ctx.globalAlpha = 0.5;
-        ctx.strokeStyle = 'grey';
-        ctx.fillStyle = 'grey';
-        ctx.beginPath();
-        ctx.arc(clickPoint.x, clickPoint.y, objClick.radius, 0, _360, false);
-        ctx.fill();
-        ctx.stroke();
-        objClick.radius+= 2;
-        if(objClick.radius>25) 
+    if(objClick.isActive)
+    {
+        let kadr = Math.floor(objClick.radius/6) % 7;
+        let sx = 200*kadr;
+        objClick.radius++;
+        ctx.drawImage(clickEffectSprite,sx,0, 200, 200, clickPoint.x-50,clickPoint.y-50, 100, 100);
+        if(kadr>=6)
         {
             objClick.isActive = false;
-            objClick.radius = 0;
-        }
-        ctx.globalAlpha = 1;
-        ctx.strokeStyle = 'black';
-    }    
+            objClick.radius = 0;  
+        }  
+    }
+
+    // if(objClick.isActive){
+    //     ctx.globalAlpha = 0.5;
+    //     ctx.strokeStyle = 'grey';
+    //     ctx.fillStyle = 'grey';
+    //     ctx.beginPath();
+    //     ctx.arc(clickPoint.x, clickPoint.y, objClick.radius, 0, _360, false);
+    //     ctx.fill();
+    //     ctx.stroke();
+    //     objClick.radius+= 2;
+    //     if(objClick.radius>25) 
+    //     {
+    //         objClick.isActive = false;
+    //         objClick.radius = 0;
+    //     }
+    //     ctx.globalAlpha = 1;
+    //     ctx.strokeStyle = 'black';
+    // }    
 }
 
 function getColor()
