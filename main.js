@@ -7,6 +7,7 @@ var plane;
 var desert;
 var desertInfo;
 var water;
+var warmillSprite;
 var plainInfo;
 var lightUnitIcon;
 var heavyUnitIcon;
@@ -45,6 +46,9 @@ var fireEffect = {};
 fireEffect.ticks = 0;
 var waterffect = {};
 waterffect.ticks = 0;
+var warmillEffect = {};
+warmillEffect.ticks = 0;
+
 const aHex = 50;
 const d2h = Math.sqrt(3)*aHex; //
 const dh = (Math.sqrt(3)*aHex)/2; //
@@ -76,6 +80,9 @@ function loadResources() {
     desert.src = "images/desert.png";
     water = new Image();
     water.src = "images/waterSprite.png";
+    warmillSprite = new Image();
+    warmillSprite.src = "images/warmillSprite.png";
+    
     plainInfo = new Image();
     plainInfo.src = "images/plainInfo.png";
     lightUnitIcon = new Image();
@@ -346,10 +353,24 @@ function drowPlane()
 }
 function drawInfo()
 {
-    ctx.drawImage(lightUnitIcon, 1100, 500, 50, 50);
-    ctx.drawImage(heavyUnitIcon, 1155, 500, 50, 50);
-    ctx.drawImage(rangeUnitIcon, 1210, 500, 50, 50);
-    ctx.drawImage(fastUnitIcon, 1265, 500, 50, 50);
+    //ctx.drawImage(lightUnitIcon, 1100, 500, 50, 50);
+   // ctx.drawImage(heavyUnitIcon, 1155, 500, 50, 50);
+   // ctx.drawImage(rangeUnitIcon, 1210, 500, 50, 50);
+   // ctx.drawImage(fastUnitIcon, 1265, 500, 50, 50);
+   // warmilSprite
+   let kadr = Math.floor(warmillEffect.ticks/25) % 10;
+   if(kadr < 9)
+   {         
+    warmillEffect.ticks ++;
+   }
+   else
+   {
+    warmillEffect.ticks = 1;   
+    kadr = 0;
+   }
+
+   let sx = 429*kadr;
+   ctx.drawImage(warmillSprite,sx,0, 429, 429, 1100, 500, 300, 300);
     
     if(currentHexIndex != -1){
         ctx.fillStyle = "black";
